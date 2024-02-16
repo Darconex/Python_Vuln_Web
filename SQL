@@ -1,0 +1,18 @@
+import requests
+
+def check_sql_injection_vulnerability(url):
+    # Payload de test pour l'injection SQL (pouvant varier selon le SGBD)
+    payload = "' OR '1'='1"
+
+    # Envoi de la requête avec le payload injecté dans les paramètres de l'URL
+    response = requests.get(url + "?id=" + payload)
+
+    # Analyse de la réponse pour détecter si l'injection a réussi
+    if "Error" in response.text:
+        print(f"L'URL {url} est potentiellement vulnérable à une injection SQL !")
+    else:
+        print(f"L'URL {url} semble sécurisée contre les injections SQL.")
+
+# Exemple d'utilisation
+url_to_check = input("Entrez l'URL à vérifier : ")
+check_sql_injection_vulnerability(url_to_check)
