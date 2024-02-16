@@ -1,0 +1,20 @@
+import requests
+
+# Fonction pour vérifier si une URL est vulnérable à XSS
+def check_xss_vulnerability(url):
+    # Payload XSS de test
+    payload = "<script>alert('XSS Vulnerable')</script>"
+
+    # Envoyer une requête GET avec le payload XSS
+    response = requests.get(url + payload)
+
+    # Vérifier si le payload est présent dans la réponse
+    if payload in response.text:
+        print(f"La page {url} est potentiellement vulnérable à XSS")
+    else:
+        print(f"La page {url} n'est pas vulnérable à XSS")
+
+# Exemple d'utilisation
+if __name__ == "__main__":
+    url_to_check = input("Entrez l'URL à vérifier : ")
+    check_xss_vulnerability(url_to_check)
